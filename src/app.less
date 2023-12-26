@@ -1,0 +1,35 @@
+.app-page {
+  margin: 30px auto;
+  border: 3px solid #000;
+  border-radius: 4px 0 4px 0;
+
+  .test-less {
+    font-size: 16px;
+    font-weight: bold;
+    font-style: italic;
+    background-color: red;
+  }
+
+  .test-postcss {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #12345678;
+
+    div:nth-of-type(1) {
+      background: red;
+    }
+
+    div:nth-of-type(2) {
+      background: green;
+    }
+  }
+
+  .test-img {
+    height: 50px;
+    border: 1px solid #123456;
+    margin: 10px;
+    background: url(./assets/0-0.png);
+    background-size: auto 50px;
+  }
+}
