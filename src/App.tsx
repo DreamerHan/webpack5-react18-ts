@@ -2,6 +2,11 @@ import React from 'react'
 import './App.less'
 import { Outline, Main, Pager } from '@src/components'
 
+import { pdfjs } from 'react-pdf'
+pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.js', import.meta.url).toString()
+import 'react-pdf/dist/Page/AnnotationLayer.css'
+import 'react-pdf/dist/Page/TextLayer.css'
+
 const App = () => {
   return (
     <div className="app-pdf">
