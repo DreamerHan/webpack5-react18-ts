@@ -1,29 +1,22 @@
-import React, { useState, useEffect, useRef, MutableRefObject } from 'react'
+import React from 'react'
 import './App.less'
-
-import aiImage from './assets/ai.png'
+import { Outline, Main } from '@src/components'
 
 const App = () => {
-  const [tsNum, setTsNum] = useState<number>(0)
-
-  const domRef = useRef<HTMLDivElement | null>(null)
-
-  useEffect(() => {
-    setTsNum(10)
-  }, [])
-
   return (
-    <div className="app-page">
-      我是一个越来越不简单的 React 页面
-      <p className="test-less">我来测试 less 的包裹写法</p>
-      <div className="test-postcss">
-        <div ref={domRef}>测试postcss-left</div>
+    <div className="app-pdf">
+      <div className="app-pdf__left">
+        <div className="app-pdf__toolbar">顶部工具栏</div>
 
-        <div>测试postcss-right</div>
+        <div className="app-pdf__preview">
+          <Outline />
+          <Main />
+        </div>
       </div>
-      <img src={aiImage} />
-      <div className="test-img"></div>
-      <div>{tsNum}</div>
+
+      <div className="app-pdf__right">
+        <div>右侧会话模块</div>
+      </div>
     </div>
   )
 }

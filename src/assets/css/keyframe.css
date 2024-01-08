@@ -1,0 +1,14 @@
+// 预览内容加载动画
+@keyframes imgSlideEffect {
+  0% {
+    transform: translateX(-200%);
+  }
+
+  50% {
+    transform: translateX(50%);
+  }
+
+  100% {
+    transform: translateX(200%);
+  }
+}
