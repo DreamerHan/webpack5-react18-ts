@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './index.less'
+import { PageLoading } from '@src/components'
 
 // react-pdf@7
 import { Document, Page } from 'react-pdf'
@@ -65,7 +66,12 @@ export const Main = () => {
       <div className="app-pdf__preview-hidden">
         <div className="app-pdf__preview-scroll" ref={pdfPreviewContainerRef}>
           <div className="app-pdf__preview-document" style={{ width: Math.min(pdfPageWidth, 1200) }}>
-            <Document file={pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
+            <Document
+              file={pdfFile}
+              onLoadSuccess={onDocumentLoadSuccess}
+              loading={
+                <PageLoading pageWidth={Math.min(containerSize.width, 1200)} pageHeight={containerSize.height} />
+              }>
               {Array.from({ length: pdfAllPages }, (_, index) => index).map((item) => (
                 <Page
                   inputRef={pdfPageRef}
@@ -73,6 +79,7 @@ export const Main = () => {
                   key={item}
                   pageIndex={item}
                   width={Math.min(pdfPageWidth, 1200)}
+                  loading={<PageLoading pageWidth={Math.min(pdfPageWidth, 1200)} pageHeight={containerSize.height} />}
                   onRenderSuccess={handlePdfPageRenderSuccess}
                 />
               ))}
