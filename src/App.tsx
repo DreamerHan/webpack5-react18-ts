@@ -1,12 +1,14 @@
 import React from 'react'
 import './App.less'
-import { Outline, Main } from '@src/components'
+import { Outline, Main, Pager } from '@src/components'
 
 const App = () => {
   return (
     <div className="app-pdf">
       <div className="app-pdf__left">
-        <div className="app-pdf__toolbar">顶部工具栏</div>
+        <div className="app-pdf__toolbar">
+          <Pager />
+        </div>
 
         <div className="app-pdf__preview">
           <Outline />
