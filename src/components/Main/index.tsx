@@ -6,8 +6,11 @@ import { PageLoading } from '@src/components'
 import { Document, Page } from 'react-pdf'
 import pdfFile from '@src/assets/pdfs/kejian.pdf'
 
+import useGetCurrentNum from '@src/hooks/useGetCurrentNum'
+
 // pdf 页面的
 const pdfMainPaddingSize = 24
+const pdfPageClass = 'app-pdf__preview__pdf-page'
 
 export const Main = () => {
   const [pdfAllPages, setPdfAllPage] = useState<number>(0) // pdf 的总页数
@@ -23,6 +26,17 @@ export const Main = () => {
   const pdfPreviewContainerRef = useRef<HTMLDivElement | null>(null)
   const pdfPageRef = useRef<HTMLDivElement | null>(null)
 
+  const { value: showPage } = useGetCurrentNum({
+    scrollContainer: pdfPreviewContainerRef,
+    itemClass: `.${pdfPageClass}`,
+    deps: [pdfLoadSuccess],
+  })
+
+  useEffect(() => {
+    console.log('showPage', showPage)
+  }, [showPage])
+
+  // Pdf file 加载完成
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
     // 保存pdf全部页数
     setPdfAllPage(numPages)
@@ -75,7 +89,7 @@ export const Main = () => {
               {Array.from({ length: pdfAllPages }, (_, index) => index).map((item) => (
                 <Page
                   inputRef={pdfPageRef}
-                  className="app-pdf__preview__pdf-page"
+                  className={pdfPageClass}
                   key={item}
                   pageIndex={item}
                   width={Math.min(pdfPageWidth, 1200)}

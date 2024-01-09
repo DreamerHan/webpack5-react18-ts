@@ -25,6 +25,24 @@
     overflow-y: scroll;
     padding: 0 12px;
     height: 100%;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 0px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background: rgba(0, 0, 0, 0.24);
+    }
+
+    &::-webkit-scrollbar-corner {
+      background: transparent;
+    }
   }
 
   &-document {
