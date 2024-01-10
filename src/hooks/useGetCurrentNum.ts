@@ -30,11 +30,13 @@ const useGetCurrentNum = (props: PropsType) => {
     for (let i = 0; i < itemDomRef.current.length; i++) {
       const { top } = itemDomRef.current[i].getBoundingClientRect()
 
+      // 容器滚动时，每一页距离浏览器可视口顶部的距离越来越小直到负数，小于滚动容器一半时，就切换到下一页
       if (top >= 0 && top < containerHeight / 2) {
         setValue(i + 1)
         break
       }
 
+      // 上一页变成了负数不再进入上一个判断中，下一页距离顶部的距离肯定大于容器的一半高度，切换到下一页
       if (top > containerHeight / 2) {
         setValue(i === 0 ? 1 : i)
         break
