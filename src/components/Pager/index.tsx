@@ -7,15 +7,9 @@ export const Pager = ({
   current = 1,
   prevDisabled = false,
   nextDisabled = false,
-  clickNextPage = () => {
-    console.log('clickNextPage')
-  },
-  clickPrevPage = () => {
-    console.log('clickPrevPage')
-  },
-  jumpPage = () => {
-    console.log('jumpPage')
-  },
+  clickNextPage,
+  clickPrevPage,
+  jumpPage,
 }) => {
   const [value, setValue] = useState(current || 1)
 
@@ -36,8 +30,7 @@ export const Pager = ({
         jumpVal = 1
       }
 
-      // jumpPage(jumpVal);
-      jumpPage()
+      jumpPage(jumpVal)
     }
   }
 

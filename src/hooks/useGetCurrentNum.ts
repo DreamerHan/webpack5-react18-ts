@@ -15,20 +15,34 @@ const useGetCurrentNum = (props: PropsType) => {
 
   const [value, setValue] = useState(1) // 滚动dom后的当前页数
   const [containerHeight, setContainerHeight] = useState(0)
-  const itemDomRef = useRef<NodeListOf<Element>>()
+  const itemsDomRef = useRef<NodeListOf<Element>>()
+
+  // 暴露滚动到指定页面的方法，方便应用钩子的组件能跳转到指定页面
+  const scrollToTargetPage = (page: number) => {
+    if (!itemsDomRef.current && scrollContainer.current) {
+      itemsDomRef.current = scrollContainer.current.querySelectorAll(itemClass)
+    }
+
+    // 这里要减去1，比如当要翻到第二页时，元素要滚动过的距离其实就是第一页的高度
+    if (itemsDomRef.current[page - 1]) {
+      const offsetTop = (itemsDomRef.current[page - 1] as HTMLDivElement).offsetTop
+      scrollContainer.current.scrollTop = offsetTop
+      setValue(page)
+    }
+  }
 
   // dom 元素滚动
   const handleDomScroll = throttle(() => {
-    if (!itemDomRef.current) {
-      itemDomRef.current = document.querySelectorAll(itemClass)
+    if (!itemsDomRef.current) {
+      itemsDomRef.current = document.querySelectorAll(itemClass)
     }
 
-    if (!itemDomRef.current && itemDomRef.current.length === 0) {
+    if (!itemsDomRef.current && itemsDomRef.current.length === 0) {
       return
     }
 
-    for (let i = 0; i < itemDomRef.current.length; i++) {
-      const { top } = itemDomRef.current[i].getBoundingClientRect()
+    for (let i = 0; i < itemsDomRef.current.length; i++) {
+      const { top } = itemsDomRef.current[i].getBoundingClientRect()
 
       // 容器滚动时，每一页距离浏览器可视口顶部的距离越来越小直到负数，小于滚动容器一半时，就切换到下一页
       if (top >= 0 && top < containerHeight / 2) {
@@ -42,7 +56,7 @@ const useGetCurrentNum = (props: PropsType) => {
         break
       }
 
-      if (i === itemDomRef.current.length - 1) {
+      if (i === itemsDomRef.current.length - 1) {
         setValue(i + 1)
       }
     }
@@ -59,7 +73,7 @@ const useGetCurrentNum = (props: PropsType) => {
     }
   }, [...deps])
 
-  return { value }
+  return { value, scrollToTargetPage }
 }
 
 export default useGetCurrentNum
@@ -73,7 +87,7 @@ export default useGetCurrentNum
  *
  * 然后通过 scrollTop / 单个元素的高度 来计算当前展示的个数
  *
- * 即：Math.ceil(scrollContainer.current.scrollTop / itemDomRef.current.getBoundingClientRect().height)
+ * 即：Math.ceil(scrollContainer.current.scrollTop / itemsDomRef.current.getBoundingClientRect().height)
  *
  * 但是这种计算方式只能针对于文档高度相同的文件
  *

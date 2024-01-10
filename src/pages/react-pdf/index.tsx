@@ -15,7 +15,7 @@ const pdfPageClass = 'app-pdf__preview__pdf-page'
 
 const ReactPdf = () => {
   const [pdfAllPages, setPdfAllPage] = useState<number>(0) // pdf 的总页数
-  const [pdfShowPages, setPdfShowPages] = useState<number>(0) // pdf 展示的页数
+  const [pdfCurrentPage, setPdfCurrentPage] = useState<number>(0) // pdf 当前现实的页数
 
   const [pdfLoadSuccess, setPdfLoadSuccess] = useState<boolean>(false) // pdf文档加载结束
 
@@ -27,24 +27,20 @@ const ReactPdf = () => {
   const pdfPreviewContainerRef = useRef<HTMLDivElement | null>(null)
   const pdfPageRef = useRef<HTMLDivElement | null>(null)
 
-  const { value: showPage } = useGetCurrentNum({
+  const { value: showPage, scrollToTargetPage } = useGetCurrentNum({
     scrollContainer: pdfPreviewContainerRef,
     itemClass: `.${pdfPageClass}`,
     deps: [pdfLoadSuccess],
   })
 
   useEffect(() => {
-    console.log('showPage', showPage)
+    setPdfCurrentPage(showPage)
   }, [showPage])
 
   // Pdf file 加载完成
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
     // 保存pdf全部页数
     setPdfAllPage(numPages)
-
-    // 保存当前展示的页面数量，尤其是第一次只渲染一页，用于快速计算pdf页面的高度
-    setPdfShowPages(1)
-
     setPdfLoadSuccess(true)
   }
 
@@ -80,7 +76,15 @@ const ReactPdf = () => {
     <div className="app-pdf">
       <div className="app-pdf__left">
         <div className="app-pdf__toolbar">
-          <Pager />
+          <Pager
+            total={pdfAllPages}
+            current={showPage}
+            prevDisabled={showPage === 1}
+            nextDisabled={showPage === pdfAllPages}
+            clickNextPage={() => scrollToTargetPage(showPage + 1)}
+            clickPrevPage={() => scrollToTargetPage(showPage - 1)}
+            jumpPage={(page) => scrollToTargetPage(page)}
+          />
         </div>
 
         <div className="app-pdf__preview">
