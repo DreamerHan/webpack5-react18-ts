@@ -11,3 +11,5 @@
 export * from './Pager'
 export * from './Outline'
 export * from './PageLoading'
+export * from './SizeAdjuster'
+export * from './LayoutRight'

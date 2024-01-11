@@ -1,0 +1,40 @@
+.size-adjuster {
+  position: absolute;
+  user-select: none;
+  width: 12px;
+  height: 100%;
+  top: 0px;
+  left: -6px;
+  cursor: col-resize;
+  border: 1px solid transparent;
+  z-index: 20;
+  transition: all 0.2s;
+
+  &::before,
+  &::after {
+    width: 1px;
+    height: 10px;
+    position: absolute;
+    top: 50%;
+    display: none;
+    transform: translateY(-50%);
+    content: '';
+  }
+
+  &:hover {
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+  }
+
+  &:hover::before {
+    display: block;
+    right: 7px;
+    background-color: #d9d9d9;
+  }
+
+  &:hover::after {
+    display: block;
+    right: 3px;
+    background-color: #d9d9d9;
+  }
+}

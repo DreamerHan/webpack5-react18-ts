@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './index.less'
-import { Outline, Pager, PageLoading } from '@src/pages/react-pdf/components'
+import { Outline, Pager, PageLoading, LayoutRight } from '@src/pages/react-pdf/components'
 
 import { pdfjs, Document, Page } from 'react-pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -140,9 +140,7 @@ const ReactPdf = () => {
         </div>
       </div>
 
-      <div className="app-pdf__right">
-        <div>右侧会话模块</div>
-      </div>
+      <LayoutRight />
     </div>
   )
 }
