@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './index.less'
-import { Outline, Pager, PageLoading } from '@src/components'
+import { Outline, Pager, PageLoading } from '@src/pages/react-pdf/components'
 
 import { pdfjs, Document, Page } from 'react-pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.js', import.meta.url).toString()

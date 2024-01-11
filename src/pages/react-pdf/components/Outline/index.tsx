@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import './index.less'
 
-import { PageLoading } from '@src/components'
+import { PageLoading } from '@src/pages/react-pdf/components'
 import { Document, Thumbnail } from 'react-pdf'
 import pdfFile from '@src/assets/pdfs/kejian.pdf'
 
