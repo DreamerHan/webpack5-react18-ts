@@ -3,7 +3,10 @@ import './index.less'
 import { Outline, Pager, PageLoading } from '@src/pages/react-pdf/components'
 
 import { pdfjs, Document, Page } from 'react-pdf'
-pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.js', import.meta.url).toString()
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.js',
+  import.meta.url,
+).toString()
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 import pdfFile from '@src/assets/pdfs/kejian.pdf'
@@ -19,7 +22,10 @@ const ReactPdf = () => {
 
   const [pdfLoadSuccess, setPdfLoadSuccess] = useState<boolean>(false) // pdf文档加载结束
 
-  const [containerSize, setContainerSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 }) // pdf预览父级dom的初始化宽高
+  const [containerSize, setContainerSize] = useState<{
+    width: number
+    height: number
+  }>({ width: 0, height: 0 }) // pdf预览父级dom的初始化宽高
 
   const [pdfPageWidth, setPdfPageWidth] = useState<number>(300) // pdf 页面宽度
   const [pdfPageHeight, setPdfPageHeight] = useState<number>(0) // pdf 页面高度
@@ -88,31 +94,44 @@ const ReactPdf = () => {
         </div>
 
         <div className="app-pdf__preview">
-          <Outline />
+          <Outline
+            currentPage={pdfCurrentPage}
+            scrollToTargetPage={(page) => scrollToTargetPage(page)}
+          />
 
           <div className="app-pdf__preview-main">
             <div className="app-pdf__preview-hidden">
               <div className="app-pdf__preview-scroll" ref={pdfPreviewContainerRef}>
-                <div className="app-pdf__preview-document" style={{ width: Math.min(pdfPageWidth, 1200) }}>
+                <div
+                  className="app-pdf__preview-document"
+                  style={{ width: Math.min(pdfPageWidth, 1200) }}>
                   <Document
                     file={pdfFile}
                     onLoadSuccess={onDocumentLoadSuccess}
                     loading={
-                      <PageLoading pageWidth={Math.min(containerSize.width, 1200)} pageHeight={containerSize.height} />
-                    }>
-                    {Array.from({ length: pdfAllPages }, (_, index) => index).map((item) => (
-                      <Page
-                        inputRef={pdfPageRef}
-                        className={pdfPageClass}
-                        key={item}
-                        pageIndex={item}
-                        width={Math.min(pdfPageWidth, 1200)}
-                        loading={
-                          <PageLoading pageWidth={Math.min(pdfPageWidth, 1200)} pageHeight={containerSize.height} />
-                        }
-                        onRenderSuccess={handlePdfPageRenderSuccess}
+                      <PageLoading
+                        pageWidth={Math.min(containerSize.width, 1200)}
+                        pageHeight={containerSize.height}
                       />
-                    ))}
+                    }>
+                    {Array.from({ length: pdfAllPages }, (_, index) => index).map(
+                      (item) => (
+                        <Page
+                          inputRef={pdfPageRef}
+                          className={pdfPageClass}
+                          key={item}
+                          pageIndex={item}
+                          width={Math.min(pdfPageWidth, 1200)}
+                          loading={
+                            <PageLoading
+                              pageWidth={Math.min(pdfPageWidth, 1200)}
+                              pageHeight={containerSize.height}
+                            />
+                          }
+                          onRenderSuccess={handlePdfPageRenderSuccess}
+                        />
+                      ),
+                    )}
                   </Document>
                 </div>
               </div>

@@ -1,5 +1,5 @@
 module.exports = {
-  "printWidth": 120, // 设置单行输出(不折行)的最大长度
+  "printWidth": 90, // 设置单行输出(不折行)的最大长度
 
   "semi": false, // 句尾是否添加分号
 
@@ -20,4 +20,6 @@ module.exports = {
   "requirePragma": false, // (v1.7.0+) Prettier可以严格按照按照文件顶部的一些特殊的注释格式化代码，这些注释称为“require pragma”(必须杂注)
 
   "insertPragma": false, //  (v1.8.0+) Prettier可以在文件的顶部插入一个 @format的特殊注释，以表明改文件已经被Prettier格式化过了。
+
+  "softWrapHackForTagInPreserveNewlinesBlock": true
 };
