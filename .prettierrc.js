@@ -1,5 +1,5 @@
 module.exports = {
-  "printWidth": 120, // 设置单行输出(不折行)的最大长度
+  "printWidth": 90, // 设置单行输出(不折行)的最大长度
 
   "semi": false, // 句尾是否添加分号
 
