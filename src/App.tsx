@@ -1,8 +1,12 @@
 import React from 'react'
 import ReactPdf from '@src/pages/react-pdf'
+import { ReactPdfProvider } from '@src/context/reactPdfContext'
 
 const App = () => {
-  return <ReactPdf />
+  return (
+    <ReactPdfProvider>
+      <ReactPdf />
+    </ReactPdfProvider>
+  )
 }
-
 export default App

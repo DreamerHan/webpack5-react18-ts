@@ -33,7 +33,11 @@ const ReactPdfProvider = ({ children }: ReactPdfProviderPropsType) => {
 
   const value = { state, dispatch }
 
-  return <ReactPdfContext.Provider value={value}>{children}</ReactPdfContext.Provider>
+  return (
+    <ReactPdfContext.Provider value={value}>
+      {children}
+    </ReactPdfContext.Provider>
+  )
 }
 
 export { ReactPdfProvider, ReactPdfContext }

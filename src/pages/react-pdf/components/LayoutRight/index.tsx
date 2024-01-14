@@ -25,13 +25,13 @@ export const LayoutRight = () => {
 
     // 当前的布局，会话模块就在最右侧。所以，浏览器可视宽度 - 拖拽条上的鼠标距离最左侧的位置 = 最右侧的宽度
     // 小于最小宽度时停止更新宽度
-    const currentWidth = pageWidth - mouseX
-    if (currentWidth <= miniWidth) {
+    const currentChatWidth = pageWidth - mouseX
+    if (currentChatWidth <= miniWidth) {
       return
     }
 
-    pdfDispatch && pdfDispatch({ previewWidth: pageWidth - mouseX })
-    setWidth(currentWidth)
+    pdfDispatch && pdfDispatch({ previewWidth: pageWidth - currentChatWidth })
+    setWidth(currentChatWidth)
   }
 
   useEffect(() => {
@@ -39,7 +39,9 @@ export const LayoutRight = () => {
   }, [])
 
   return (
-    <div className="app-pdf__right" style={{ width: width, minWidth: miniWidth }}>
+    <div
+      className="app-pdf__right"
+      style={{ width: width, minWidth: miniWidth }}>
       <SizeAdjuster onSizeChange={handleOnSizeChange} />
     </div>
   )

@@ -1,6 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import './index.less'
-import { Outline, Pager, PageLoading, LayoutRight } from '@src/pages/react-pdf/components'
+import {
+  Outline,
+  Pager,
+  PageLoading,
+  LayoutRight,
+} from '@src/pages/react-pdf/components'
 
 import { pdfjs, Document, Page } from 'react-pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -10,6 +15,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 import pdfFile from '@src/assets/pdfs/kejian.pdf'
+import { ReactPdfContext } from '@src/context/reactPdfContext'
 
 import useGetCurrentNum from '@src/hooks/useGetCurrentNum'
 
@@ -29,6 +35,9 @@ const ReactPdf = () => {
 
   const [pdfPageWidth, setPdfPageWidth] = useState<number>(300) // pdf 页面宽度
   const [pdfPageHeight, setPdfPageHeight] = useState<number>(0) // pdf 页面高度
+
+  const { state: PdfContextState } = useContext(ReactPdfContext) // 页面上下文
+  const { previewWidth } = PdfContextState
 
   const pdfPreviewContainerRef = useRef<HTMLDivElement | null>(null)
   const pdfPageRef = useRef<HTMLDivElement | null>(null)
@@ -56,9 +65,11 @@ const ReactPdf = () => {
       return
     }
 
-    const { width, height } = pdfPreviewContainerRef.current.getBoundingClientRect()
+    const { width, height } =
+      pdfPreviewContainerRef.current.getBoundingClientRect()
     setContainerSize({ width: width - pdfMainPaddingSize, height: height })
 
+    console.log('这里')
     setPdfPageWidth(width - pdfMainPaddingSize)
   }
 
@@ -77,6 +88,15 @@ const ReactPdf = () => {
     // 所以，直接加载空白父级dom计算当前pdf的宽度即可
     calculatePdfPageWidth()
   }, [])
+
+  useEffect(() => {
+    console.log('previewWidth', previewWidth)
+    if (previewWidth === 0) {
+      return
+    }
+
+    calculatePdfPageWidth()
+  }, [previewWidth])
 
   return (
     <div className="app-pdf">
@@ -101,7 +121,9 @@ const ReactPdf = () => {
 
           <div className="app-pdf__preview-main">
             <div className="app-pdf__preview-hidden">
-              <div className="app-pdf__preview-scroll" ref={pdfPreviewContainerRef}>
+              <div
+                className="app-pdf__preview-scroll"
+                ref={pdfPreviewContainerRef}>
                 <div
                   className="app-pdf__preview-document"
                   style={{ width: Math.min(pdfPageWidth, 1200) }}>
@@ -110,28 +132,29 @@ const ReactPdf = () => {
                     onLoadSuccess={onDocumentLoadSuccess}
                     loading={
                       <PageLoading
-                        pageWidth={Math.min(containerSize.width, 1200)}
+                        pageWidth={Math.min(pdfPageWidth, 1200)}
                         pageHeight={containerSize.height}
                       />
                     }>
-                    {Array.from({ length: pdfAllPages }, (_, index) => index).map(
-                      (item) => (
-                        <Page
-                          inputRef={pdfPageRef}
-                          className={pdfPageClass}
-                          key={item}
-                          pageIndex={item}
-                          width={Math.min(pdfPageWidth, 1200)}
-                          loading={
-                            <PageLoading
-                              pageWidth={Math.min(pdfPageWidth, 1200)}
-                              pageHeight={containerSize.height}
-                            />
-                          }
-                          onRenderSuccess={handlePdfPageRenderSuccess}
-                        />
-                      ),
-                    )}
+                    {Array.from(
+                      { length: pdfAllPages },
+                      (_, index) => index,
+                    ).map((item) => (
+                      <Page
+                        inputRef={pdfPageRef}
+                        className={pdfPageClass}
+                        key={item}
+                        pageIndex={item}
+                        width={Math.min(pdfPageWidth, 1200)}
+                        loading={
+                          <PageLoading
+                            pageWidth={Math.min(pdfPageWidth, 1200)}
+                            pageHeight={pdfPageWidth}
+                          />
+                        }
+                        onRenderSuccess={handlePdfPageRenderSuccess}
+                      />
+                    ))}
                   </Document>
                 </div>
               </div>
