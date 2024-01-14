@@ -69,7 +69,6 @@ const ReactPdf = () => {
       pdfPreviewContainerRef.current.getBoundingClientRect()
     setContainerSize({ width: width - pdfMainPaddingSize, height: height })
 
-    console.log('这里')
     setPdfPageWidth(width - pdfMainPaddingSize)
   }
 
@@ -86,15 +85,6 @@ const ReactPdf = () => {
   useEffect(() => {
     // 初始化时，pdf的宽度是适配当前展示文档的dom的宽度，骨架屏的宽高更是要适配当前展示文档dom的宽高。
     // 所以，直接加载空白父级dom计算当前pdf的宽度即可
-    calculatePdfPageWidth()
-  }, [])
-
-  useEffect(() => {
-    console.log('previewWidth', previewWidth)
-    if (previewWidth === 0) {
-      return
-    }
-
     calculatePdfPageWidth()
   }, [previewWidth])
 

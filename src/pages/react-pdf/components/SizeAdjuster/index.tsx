@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import './index.less'
-import { throttle } from 'lodash-es'
 
 interface PropsType {
   onSizeChange: (mouseX: number) => void
@@ -15,12 +14,12 @@ export const SizeAdjuster = (props: PropsType) => {
     setTranslateX(event.clientX)
   }
 
-  const onMouseMove = throttle((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const onMouseMove = (event) => {
     if (down) {
       setTranslateX(event.clientX)
       props.onSizeChange(event.clientX)
     }
-  }, 150)
+  }
 
   const onMouseUp = () => {
     setDown(false)
@@ -38,5 +37,9 @@ export const SizeAdjuster = (props: PropsType) => {
     }
   }, [down, translateX])
 
-  return <div className="size-adjuster" onMouseDown={(event) => onmousedown(event)}></div>
+  return (
+    <div
+      className="size-adjuster"
+      onMouseDown={(event) => onmousedown(event)}></div>
+  )
 }

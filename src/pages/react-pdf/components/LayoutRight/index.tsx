@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import './index.less'
+import { debounce } from 'lodash-es'
 
 import { ReactPdfContext } from '@src/context/reactPdfContext'
 import { SizeAdjuster } from '@src/pages/react-pdf/components'
@@ -20,6 +21,11 @@ export const LayoutRight = () => {
     pdfDispatch && pdfDispatch({ previewWidth: pageWidth - Number(width) })
   }
 
+  // dispatch 预览宽度
+  const dispatchPreviewWith = debounce((currentChatWidth: number) => {
+    pdfDispatch && pdfDispatch({ previewWidth: pageWidth - currentChatWidth })
+  }, 1000)
+
   const handleOnSizeChange = (mouseX: number) => {
     pageWidth === 0 && setLayoutPartWidth()
 
@@ -29,9 +35,9 @@ export const LayoutRight = () => {
     if (currentChatWidth <= miniWidth) {
       return
     }
-
-    pdfDispatch && pdfDispatch({ previewWidth: pageWidth - currentChatWidth })
     setWidth(currentChatWidth)
+
+    dispatchPreviewWith(currentChatWidth)
   }
 
   useEffect(() => {
