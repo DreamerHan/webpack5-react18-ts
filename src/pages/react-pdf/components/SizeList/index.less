@@ -1,0 +1,127 @@
+.layout-right__preview-toolbar__size {
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+
+  &-mini,
+  &-plus {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover {
+      background: #ebf2fc;
+    }
+
+    i {
+      display: block;
+      width: 24px;
+      height: 24px;
+      background: url(https://so4.360tres.com/t0192c40a9e699c58d3.png) no-repeat
+        center;
+      background-size: 14px;
+    }
+  }
+
+  &-plus {
+    i {
+      background-image: url(https://so4.360tres.com/t01f9ba1eb6ba9c573f.png);
+    }
+  }
+
+  &-list {
+    height: 24px;
+    margin: 0 4px;
+    position: relative;
+
+    &__value {
+      z-index: 200;
+      width: 70px;
+      padding: 0 8px;
+      height: 24px;
+      box-sizing: border-box;
+      border-radius: 6px;
+      border: 1px solid #e5e5e5;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+
+      &:hover,
+      &.show {
+        border: 1px solid #2366ff;
+      }
+
+      i {
+        display: block;
+        width: 10px;
+        height: 10px;
+        background: url(https://so4.360tres.com/t017c1ac5efe1dd774d.png)
+          no-repeat center;
+        background-size: 10px;
+        transition: 0.2s;
+      }
+
+      &.show i {
+        transform: rotate(-180deg);
+      }
+    }
+
+    &__menu {
+      color: #000;
+      width: 98px;
+      height: 0px;
+      padding: 0px;
+      background: #fff;
+      position: absolute;
+      top: 28px;
+      left: 0;
+      z-index: 200;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.16);
+      transition: 0.2s ease-in-out;
+      opacity: 0;
+      overflow: hidden;
+      cursor: pointer;
+
+      &.show {
+        opacity: 1;
+        height: 163px;
+        padding: 4px;
+      }
+
+      &-item {
+        padding: 5px 8px;
+        font-size: 13px;
+        line-height: 21px;
+
+        &:hover {
+          border-radius: 6px;
+          background: #eff5fd;
+          color: #006bfb;
+        }
+      }
+    }
+
+    .ant-select-selector {
+      border-radius: 6px !important;
+      height: 24px !important;
+
+      .ant-select-selection-item {
+        line-height: 24px !important;
+      }
+
+      input {
+        height: 24px !important;
+      }
+    }
+
+    .ant-select-arrow {
+      right: 6px;
+      margin-top: -5px;
+    }
+  }
+}
