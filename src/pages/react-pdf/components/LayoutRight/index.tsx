@@ -4,7 +4,6 @@ import { debounce } from 'lodash-es'
 
 import { ReactPdfContext } from '@src/context/reactPdfContext'
 import { SizeAdjuster } from '@src/pages/react-pdf/components'
-import { doOnceInTime } from '@src/utils/tools'
 
 import { PDF_CHAT_PART_MIN_WIDTH } from '@src/utils/constants'
 
@@ -23,12 +22,12 @@ export const LayoutRight = () => {
   }
 
   // dispatch 预览宽度
-  const dispatchPreviewWith = doOnceInTime((currentChatWidth: number) => {
+  const dispatchPreviewWith = debounce((currentChatWidth: number) => {
     pdfDispatch && pdfDispatch({ previewWidth: pageWidth - currentChatWidth })
   }, 1000)
 
   const handleOnSizeChange = (mouseX: number) => {
-    pageWidth === 0 && setLayoutPartWidth()
+    setLayoutPartWidth()
 
     // 当前的布局，会话模块就在最右侧。所以，浏览器可视宽度 - 拖拽条上的鼠标距离最左侧的位置 = 最右侧的宽度
     // 小于最小宽度时停止更新宽度
@@ -36,8 +35,11 @@ export const LayoutRight = () => {
     if (currentChatWidth <= PDF_CHAT_PART_MIN_WIDTH) {
       return
     }
+
+    // 设置会话模块宽度
     setChatWidth(currentChatWidth)
 
+    // 派发预览宽度
     dispatchPreviewWith(currentChatWidth)
   }
 

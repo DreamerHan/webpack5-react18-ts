@@ -7,16 +7,13 @@ interface PropsType {
 
 export const SizeAdjuster = (props: PropsType) => {
   const [down, setDown] = useState(false)
-  const [translateX, setTranslateX] = useState(960) // 水平方向偏移量
 
   const onmousedown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setDown(true)
-    setTranslateX(event.clientX)
   }
 
   const onMouseMove = (event) => {
     if (down) {
-      setTranslateX(event.clientX)
       props.onSizeChange(event.clientX)
     }
   }
@@ -35,11 +32,7 @@ export const SizeAdjuster = (props: PropsType) => {
       window.removeEventListener('mousemove', onMouseMove, false)
       window.removeEventListener('mouseup', onMouseUp, false)
     }
-  }, [down, translateX])
+  }, [down])
 
-  return (
-    <div
-      className="size-adjuster"
-      onMouseDown={(event) => onmousedown(event)}></div>
-  )
+  return <div className="size-adjuster" onMouseDown={(event) => onmousedown(event)}></div>
 }
