@@ -21,8 +21,7 @@ import { ReactPdfContext } from '@src/context/reactPdfContext'
 import useGetCurrentNum from '@src/hooks/useGetCurrentNum'
 import { debounce } from 'lodash-es'
 
-const pdfMainPaddingSize = 24
-const pdfPageClass = 'app-pdf__preview__pdf-page'
+import { PDF_MAIN_PADDING_SIZE, PDF_PAGE_CLASS_NAME } from '@src/utils/constants'
 
 const ReactPdf = () => {
   const [pdfAllPages, setPdfAllPage] = useState<number>(0) // pdf 的总页数
@@ -48,7 +47,7 @@ const ReactPdf = () => {
 
   const { value: showPage, scrollToTargetPage } = useGetCurrentNum({
     scrollContainer: pdfPreviewContainerRef,
-    itemClass: `.${pdfPageClass}`,
+    itemClass: `.${PDF_PAGE_CLASS_NAME}`,
     deps: [pdfLoadSuccess],
   })
 
@@ -70,9 +69,9 @@ const ReactPdf = () => {
     }
 
     const { width, height } = pdfPreviewContainerRef.current.getBoundingClientRect()
-    setContainerSize({ width: width - pdfMainPaddingSize, height: height })
+    setContainerSize({ width: width - PDF_MAIN_PADDING_SIZE, height: height })
 
-    setPdfPageWidth(width - pdfMainPaddingSize)
+    setPdfPageWidth(width - PDF_MAIN_PADDING_SIZE)
   }
 
   // 页面渲染结束后，才可以计算到 pdf 页面的高度
@@ -167,7 +166,7 @@ const ReactPdf = () => {
                       (item) => (
                         <Page
                           inputRef={pdfPageRef}
-                          className={pdfPageClass}
+                          className={PDF_PAGE_CLASS_NAME}
                           key={item}
                           pageIndex={item}
                           width={Math.min(pdfPageWidth, 1200)}
