@@ -4,6 +4,7 @@ import { debounce } from 'lodash-es'
 
 import { ReactPdfContext } from '@src/context/reactPdfContext'
 import { SizeAdjuster } from '@src/pages/react-pdf/components'
+import { doOnceInTime } from '@src/utils/tools'
 
 const miniWidth = 300
 
@@ -11,18 +12,18 @@ export const LayoutRight = () => {
   const { dispatch: pdfDispatch } = useContext(ReactPdfContext)
 
   const [pageWidth, setPageWidth] = useState<number>(0)
-  const [width, setWidth] = useState<number>(miniWidth)
+  const [chatWidth, setChatWidth] = useState<number>(miniWidth)
 
   // 初始化或设置布局的宽度
   const setLayoutPartWidth = () => {
     const pageDom = document.querySelector('.app-pdf')
-    const { width } = pageDom.getBoundingClientRect()
-    setPageWidth(width)
-    pdfDispatch && pdfDispatch({ previewWidth: pageWidth - Number(width) })
+    const { width: pageDomWidth } = pageDom.getBoundingClientRect()
+    setPageWidth(pageDomWidth)
+    pdfDispatch && pdfDispatch({ previewWidth: pageDomWidth - chatWidth })
   }
 
   // dispatch 预览宽度
-  const dispatchPreviewWith = debounce((currentChatWidth: number) => {
+  const dispatchPreviewWith = doOnceInTime((currentChatWidth: number) => {
     pdfDispatch && pdfDispatch({ previewWidth: pageWidth - currentChatWidth })
   }, 1000)
 
@@ -35,7 +36,7 @@ export const LayoutRight = () => {
     if (currentChatWidth <= miniWidth) {
       return
     }
-    setWidth(currentChatWidth)
+    setChatWidth(currentChatWidth)
 
     dispatchPreviewWith(currentChatWidth)
   }
@@ -45,9 +46,7 @@ export const LayoutRight = () => {
   }, [])
 
   return (
-    <div
-      className="app-pdf__right"
-      style={{ width: width, minWidth: miniWidth }}>
+    <div className="app-pdf__right" style={{ width: chatWidth, minWidth: miniWidth }}>
       <SizeAdjuster onSizeChange={handleOnSizeChange} />
     </div>
   )

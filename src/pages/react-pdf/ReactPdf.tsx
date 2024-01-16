@@ -5,6 +5,7 @@ import {
   Pager,
   PageLoading,
   LayoutRight,
+  SizeList,
 } from '@src/pages/react-pdf/components'
 
 import { pdfjs, Document, Page } from 'react-pdf'
@@ -18,6 +19,7 @@ import pdfFile from '@src/assets/pdfs/kejian.pdf'
 import { ReactPdfContext } from '@src/context/reactPdfContext'
 
 import useGetCurrentNum from '@src/hooks/useGetCurrentNum'
+import { debounce } from 'lodash-es'
 
 const pdfMainPaddingSize = 24
 const pdfPageClass = 'app-pdf__preview__pdf-page'
@@ -35,6 +37,8 @@ const ReactPdf = () => {
 
   const [pdfPageWidth, setPdfPageWidth] = useState<number>(300) // pdf 页面宽度
   const [pdfPageHeight, setPdfPageHeight] = useState<number>(0) // pdf 页面高度
+
+  const [pdfSize, setPdfSize] = useState<number>(0)
 
   const { state: PdfContextState } = useContext(ReactPdfContext) // 页面上下文
   const { previewWidth } = PdfContextState
@@ -61,12 +65,11 @@ const ReactPdf = () => {
 
   // 计算PDF页面的宽度
   const calculatePdfPageWidth = () => {
-    if (!pdfPreviewContainerRef.current) {
+    if (!pdfPreviewContainerRef.current || pdfSize !== 0) {
       return
     }
 
-    const { width, height } =
-      pdfPreviewContainerRef.current.getBoundingClientRect()
+    const { width, height } = pdfPreviewContainerRef.current.getBoundingClientRect()
     setContainerSize({ width: width - pdfMainPaddingSize, height: height })
 
     setPdfPageWidth(width - pdfMainPaddingSize)
@@ -83,10 +86,41 @@ const ReactPdf = () => {
   }
 
   useEffect(() => {
+    // 初始化是 0，不进行计算，避免多次渲染问题
+    if (previewWidth === 0) {
+      return
+    }
+
     // 初始化时，pdf的宽度是适配当前展示文档的dom的宽度，骨架屏的宽高更是要适配当前展示文档dom的宽高。
     // 所以，直接加载空白父级dom计算当前pdf的宽度即可
     calculatePdfPageWidth()
   }, [previewWidth])
+
+  // 根据 pdfSize 变化来计算 pdf 宽度
+  // 手动调整了尺寸列表进行放大和缩小的操作，计算模式用当前的 containerWidth * size 尺寸
+  const calculatePdfPageWidthUsePdfSize = () => {
+    if (pdfSize === 0) {
+      calculatePdfPageWidth()
+    } else {
+      const width = containerSize.width * pdfSize
+      setPdfPageWidth(width)
+    }
+  }
+
+  // 浏览器窗口变化
+  const handleWindowResize = debounce(() => {
+    calculatePdfPageWidth()
+  }, 1000)
+
+  // 根据 pdfSize 变化和窗口的拖拽来计算 pdf 的宽度
+  useEffect(() => {
+    pdfLoadSuccess && calculatePdfPageWidthUsePdfSize()
+
+    window.addEventListener('resize', handleWindowResize, false)
+    return () => {
+      window.removeEventListener('resize', handleWindowResize, false)
+    }
+  }, [pdfSize])
 
   return (
     <div className="app-pdf">
@@ -101,6 +135,11 @@ const ReactPdf = () => {
             clickPrevPage={() => scrollToTargetPage(showPage - 1)}
             jumpPage={(page) => scrollToTargetPage(page)}
           />
+
+          <SizeList
+            defaultSize={pdfSize}
+            sizeChangeFunc={(size: number) => setPdfSize(size)}
+          />
         </div>
 
         <div className="app-pdf__preview">
@@ -111,9 +150,7 @@ const ReactPdf = () => {
 
           <div className="app-pdf__preview-main">
             <div className="app-pdf__preview-hidden">
-              <div
-                className="app-pdf__preview-scroll"
-                ref={pdfPreviewContainerRef}>
+              <div className="app-pdf__preview-scroll" ref={pdfPreviewContainerRef}>
                 <div
                   className="app-pdf__preview-document"
                   style={{ width: Math.min(pdfPageWidth, 1200) }}>
@@ -126,25 +163,24 @@ const ReactPdf = () => {
                         pageHeight={containerSize.height}
                       />
                     }>
-                    {Array.from(
-                      { length: pdfAllPages },
-                      (_, index) => index,
-                    ).map((item) => (
-                      <Page
-                        inputRef={pdfPageRef}
-                        className={pdfPageClass}
-                        key={item}
-                        pageIndex={item}
-                        width={Math.min(pdfPageWidth, 1200)}
-                        loading={
-                          <PageLoading
-                            pageWidth={Math.min(pdfPageWidth, 1200)}
-                            pageHeight={pdfPageWidth}
-                          />
-                        }
-                        onRenderSuccess={handlePdfPageRenderSuccess}
-                      />
-                    ))}
+                    {Array.from({ length: pdfAllPages }, (_, index) => index).map(
+                      (item) => (
+                        <Page
+                          inputRef={pdfPageRef}
+                          className={pdfPageClass}
+                          key={item}
+                          pageIndex={item}
+                          width={Math.min(pdfPageWidth, 1200)}
+                          loading={
+                            <PageLoading
+                              pageWidth={Math.min(pdfPageWidth, 1200)}
+                              pageHeight={pdfPageWidth}
+                            />
+                          }
+                          onRenderSuccess={handlePdfPageRenderSuccess}
+                        />
+                      ),
+                    )}
                   </Document>
                 </div>
               </div>

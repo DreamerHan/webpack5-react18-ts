@@ -8,6 +8,7 @@
     "jsx": "react", // 允许编译器支持react代码
     "noEmit": true, // 告知 Typescript 编译器，只做类型校验不输出 js 文件
     "moduleResolution": "Node",
+    "downlevelIteration": true,
     "baseUrl": "./src",
     "paths": {
       "@src/*": ["./*"]
