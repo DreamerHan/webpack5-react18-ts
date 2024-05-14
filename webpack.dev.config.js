@@ -5,7 +5,7 @@ module.exports = merge(webpackBaseConfig, {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
   devServer: {
-    port: 9527,
+    port: 9528,
     hot: true,
   }
 })
